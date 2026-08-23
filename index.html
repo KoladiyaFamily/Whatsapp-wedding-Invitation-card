@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation Admin & Generator</title>
+    <!-- Google Fonts for royal feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Great+Vibes&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- html2canvas for High-Quality Card Image Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark: #220306;
+            --maroon-primary: #4a0910;
+            --maroon-dark: #31050a;
+            --maroon-light: #5c101c;
+            --maroon-grad: linear-gradient(135deg, #4a0910, #6e131e, #4a0910);
+            --gold-primary: #d4af37;
+            --gold-light: #f3e2bf;
+            --gold-dark: #b38f2a;
+            --gold-grad: linear-gradient(135deg, #f9f0dc 0%, #d4af37 50%, #aa8420 100%);
+            --card-bg: #fcf6eb;
+            --events-bg: #f7eedc;
+            --text-dark: #4a0910;
+            --text-muted: #7a6b5d;
+            --whatsapp-green: #25D366;
+            --whatsapp-dark: #128C7E;
+            --whatsapp-bg: #EFEAE2;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 30%, #44070e 0%, #1a0205 100%);
+            color: #333;
+            font-family: 'Montserrat', 'Georgia', serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+        }
+
+        /* Top Navigation Bar */
+        .top-nav {
+            width: 100%;
+            max-width: 1160px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 12px 20px;
+            background: rgba(49, 5, 10, 0.88);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+        }
+
+        .brand-title {
+            color: var(--gold-primary);
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 4px;
+            border-radius: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .tab-btn {
+            background: transparent;
+            color: #e6d0b3;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .tab-btn:hover {
+            color: #fff;
+            background: rgba(212, 175, 55, 0.2);
+        }
+
+        .tab-btn.active {
+            background: var(--gold-grad);
+            color: #31050a;
+            box-shadow: 0 2px 10px rgba(212, 175, 55, 0.4);
+            font-weight: 700;
+        }
+
+        /* View Containers */
+        .view-container {
+            width: 100%;
+            max-width: 1160px;
+            display: none;
+        }
+
+        .view-container.active {
+            display: flex;
+            justify-content: center;
+            animation: fadeIn 0.35s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Admin Dashboard & Generator Layout */
+        .admin-dashboard {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .generator-card {
+            background: #fffdf9;
+            border-radius: 16px;
+            border: 2px solid var(--gold-primary);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            overflow: hidden;
+        }
+
+        .card-header-banner {
+            background: var(--maroon-grad);
+            border-bottom: 2px solid var(--gold-primary);
+            padding: 16px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-header-banner h2 {
+            color: var(--gold-light);
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .badge-live {
+            background: rgba(37, 211, 102, 0.2);
+            border: 1px solid var(--whatsapp-green);
+            color: #4ade80;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .badge-live::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            background: #25D366;
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px #25D366;
+        }
+
+        .generator-grid {
+            display: grid;
+            grid-template-columns: 1.25fr 1fr;
+            gap: 22px;
+            padding: 22px;
+        }
+
+        @media (max-width: 900px) {
+            .generator-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Form Sections */
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .section-box {
+            background: #fff;
+            border: 1px solid #e2d7c5;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--maroon-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ede3d2;
+            padding-bottom: 6px;
+        }
+
+        .form-row-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .input-group label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--maroon-primary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #dcd2c4;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: inherit;
+            color: #31050a;
+            background-color: #fdfaf5;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--maroon-primary);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(74, 9, 16, 0.12);
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 54px;
+            line-height: 1.4;
+        }
+
+        /* Preset Chips */
+        .quick-presets {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 2px;
+        }
+
+        .preset-chip {
+            background: #f2e9dc;
+            border: 1px solid #dcd2c4;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--maroon-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+        }
+
+        .preset-chip:hover {
+            background: var(--maroon-primary);
+            color: #fff;
+            border-color: var(--maroon-primary);
+        }
+
+        /* Dynamic Events List & Controls */
+        .events-list-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .event-edit-card {
+            background: #faf4e8;
+            border: 1px solid #e5d8bf;
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .event-edit-card:hover {
+            border-color: var(--gold-primary);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .event-edit-card.disabled-event {
+            opacity: 0.55;
+            background: #f1ede6;
+        }
+
+        .event-top-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-check {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--maroon-primary);
+            cursor: pointer;
+        }
+
+        .event-name-input {
+            flex: 2;
+            font-weight: 700;
+            padding: 6px 10px;
+            font-size: 12.5px;
+        }
+
+        .event-date-input {
+            flex: 1.2;
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+
+        .event-bottom-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-left: 28px;
+        }
+
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .counter-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            border: 1px solid #d0c0a8;
+            background: #fff;
+            color: var(--maroon-primary);
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+        }
+
+        .counter-btn:hover:not(:disabled) {
+            background: var(--maroon-primary);
+            color: #fff;
+            border-color: var(--maroon-primary);
+        }
+
+        .counter-val-input {
+            width: 44px;
+            text-align: center;
+            padding: 4px 2px;
+            border: 1px solid #dcd2c4;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 12.5px;
+            color: var(--maroon-primary);
+            background: #fff;
+        }
+
+        .btn-delete-event {
+            background: transparent;
+            border: none;
+            color: #a82e2e;
+            font-size: 11px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .btn-delete-event:hover {
+            background: #fee2e2;
+            text-decoration: underline;
+        }
+
+        .btn-add-event {
+            background: #f7eedc;
+            border: 1px dashed var(--gold-primary);
+            color: var(--maroon-primary);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-add-event:hover {
+            background: var(--maroon-primary);
+            color: #fff;
+            border-style: solid;
+        }
+
+        /* Right Column: WhatsApp Preview & Buttons */
+        .preview-column {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .preview-header h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--maroon-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .whatsapp-mockup {
+            background-color: var(--whatsapp-bg);
+            background-image: radial-gradient(#d3c6b2 1px, transparent 1px);
+            background-size: 16px 16px;
+            border: 1px solid #d0c8bd;
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            position: relative;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .whatsapp-bubble {
+            background: #ffffff;
+            border-radius: 8px 8px 8px 2px;
+            padding: 12px 14px;
+            max-width: 98%;
+            position: relative;
+            box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.15);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 12.8px;
+            line-height: 1.5;
+            color: #111b21;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .whatsapp-bubble::before {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: -8px;
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-right: 8px solid #ffffff;
+        }
+
+        .whatsapp-time {
+            float: right;
+            font-size: 10px;
+            color: #667781;
+            margin-top: 4px;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* Action Buttons */
+        .admin-action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            margin-top: 4px;
+        }
+
+        .btn-main-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+            transition: all 0.25s ease;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-main-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(37, 211, 102, 0.5);
+            background: linear-gradient(135deg, #2ae06d, #0f7c6f);
+        }
+
+        .btn-download-image {
+            background: linear-gradient(135deg, #d4af37 0%, #aa8420 50%, #4a0910 100%);
+            color: #ffffff;
+            border: 1px solid var(--gold-primary);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+            box-shadow: 0 4px 14px rgba(212, 175, 55, 0.35);
+            transition: all 0.25s ease;
+            font-family: 'Montserrat', sans-serif;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+        }
+
+        .btn-download-image:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(212, 175, 55, 0.55);
+            background: linear-gradient(135deg, #e5c355 0%, #b89128 50%, #5c101c 100%);
+        }
+
+        .secondary-actions-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .btn-secondary-action {
+            background: #fff;
+            border: 1.5px solid var(--maroon-primary);
+            color: var(--maroon-primary);
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-secondary-action:hover {
+            background: var(--maroon-primary);
+            color: #fff;
+        }
+
+        /* Success Toast */
+        .toast-notification {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #111b21;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            border-left: 4px solid var(--whatsapp-green);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 9999;
+        }
+
+        .toast-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ========================================================
+           DIGITAL WEDDING CARD STYLES
+           ======================================================== */
+        .card-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 520px;
+            background-color: var(--card-bg);
+            border: 8px solid var(--maroon-primary);
+            outline: 2px solid var(--gold-primary);
+            outline-offset: -5px;
+            padding: 35px 25px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+            border-radius: 4px;
+        }
+
+        .header-top {
+            font-size: 13px;
+            color: var(--maroon-light);
+            letter-spacing: 1.5px;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .sub-invite {
+            font-size: 10px;
+            color: var(--maroon-light);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .ornament-divider {
+            color: var(--gold-primary);
+            font-size: 14px;
+            margin: 10px 0;
+            user-select: none;
+        }
+
+        .couple-names {
+            font-family: 'Great Vibes', 'Brush Script MT', cursive, serif;
+            font-size: 46px;
+            color: var(--maroon-primary);
+            margin: 4px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            line-height: 1.1;
+        }
+
+        .heart-icon {
+            color: var(--gold-primary);
+            font-size: 22px;
+        }
+
+        .tagline-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            font-size: 10px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+        }
+
+        .dear-section {
+            margin-bottom: 18px;
+        }
+
+        .dear-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .family-name {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--maroon-primary);
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-family: 'Cinzel', serif;
+            transition: all 0.3s ease;
+        }
+
+        .welcome-msg {
+            font-size: 11px;
+            color: #5a4a42;
+            line-height: 1.5;
+            padding: 0 15px;
+        }
+
+        .events-box {
+            background-color: var(--events-bg);
+            border: 1px solid var(--gold-primary);
+            border-radius: 6px;
+            margin-top: 18px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .events-header-bg {
+            background: var(--maroon-grad);
+            padding: 9px;
+            margin: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--gold-primary);
+        }
+
+        .events-header {
+            color: var(--card-bg);
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .event-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            border-bottom: 1px solid #e8dac2;
+            font-size: 11px;
+            transition: background 0.2s ease;
+        }
+
+        .event-row:last-child {
+            border-bottom: none;
+        }
+
+        .event-name {
+            color: var(--maroon-primary);
+            font-weight: 700;
+            text-align: left;
+            flex: 2;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .event-date {
+            color: #5a4a42;
+            flex: 1.2;
+            text-align: center;
+            font-size: 10.5px;
+            font-weight: 500;
+        }
+
+        .event-guests {
+            background-color: #fff;
+            border: 1px solid #e6d7be;
+            padding: 3px 8px;
+            border-radius: 12px;
+            color: var(--maroon-primary);
+            font-size: 10px;
+            font-weight: 700;
+            flex: 0.9;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+
+        .bottom-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 22px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .actions-container {
+            width: 100%;
+            max-width: 340px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .personal-invitation-title {
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        .url-button {
+            background: var(--maroon-grad);
+            color: var(--card-bg);
+            border: 1px solid var(--gold-primary);
+            padding: 9px 12px;
+            border-radius: 4px;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+            word-break: break-all;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            transition: all 0.2s ease;
+        }
+
+        .url-button:hover {
+            border-color: #fff;
+            color: var(--gold-light);
+        }
+
+        .open-button {
+            background: linear-gradient(to bottom, #f3e2bf, #dcc08c);
+            color: var(--maroon-primary);
+            border: 1px solid #c2a265;
+            padding: 10px 14px;
+            border-radius: 20px;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+        }
+
+        .open-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+            background: linear-gradient(to bottom, #faedd3, #e5cb9b);
+        }
+
+        .footer {
+            margin-top: 20px;
+        }
+
+        .footer-blessing {
+            font-size: 9px;
+            color: var(--text-muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .footer-names {
+            font-family: 'Great Vibes', 'Brush Script MT', cursive, serif;
+            font-size: 26px;
+            color: var(--maroon-primary);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NAVIGATION -->
+    <nav class="top-nav">
+        <div class="brand-title">
+            <span>✨</span>
+            <span id="navCoupleDisplay">ARJUN & KAVYA WEDDING</span>
+        </div>
+        <div class="tab-buttons">
+            <button class="tab-btn active" id="tabBtnGenerator" onclick="switchTab('generator')">
+                <span>📱</span>
+                <span>WhatsApp Guest Generator</span>
+            </button>
+            <button class="tab-btn" id="tabBtnCard" onclick="switchTab('card')">
+                <span>👑</span>
+                <span>Live Digital Card</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- VIEW 1: ADMIN GENERATOR -->
+    <main class="view-container active" id="generatorView">
+        <div class="admin-dashboard">
+            <div class="generator-card">
+                <div class="card-header-banner">
+                    <h2>
+                        <span>💬</span>
+                        <span>WhatsApp Guest Invitation Generator</span>
+                    </h2>
+                    <div class="badge-live">Real-Time Live Sync</div>
+                </div>
+
+                <div class="generator-grid">
+                    <!-- LEFT COLUMN: INPUTS -->
+                    <div class="form-column">
+                        
+                        <!-- 1. Guest Details -->
+                        <div class="section-box">
+                            <div class="section-title">
+                                <span>👥 Guest / Family Information</span>
+                            </div>
+                            <div class="input-group">
+                                <label for="inputFamilyName">Guest / Family Name</label>
+                                <input type="text" id="inputFamilyName" class="form-control" value="SHAH FAMILY" oninput="updateAllPreviews()">
+                                <div class="quick-presets">
+                                    <span style="font-size:11px; color:#7a6b5d; align-self:center;">Presets:</span>
+                                    <button type="button" class="preset-chip" onclick="setPresetName('SHAH FAMILY')">Shah Family</button>
+                                    <button type="button" class="preset-chip" onclick="setPresetName('SHARMA FAMILY')">Sharma Family</button>
+                                    <button type="button" class="preset-chip" onclick="setPresetName('PATEL FAMILY')">Patel Family</button>
+                                    <button type="button" class="preset-chip" onclick="setPresetName('MEHTA FAMILY')">Mehta Family</button>
+                                </div>
+                            </div>
+                            <div class="form-row-2col">
+                                <div class="input-group">
+                                    <label for="inputGuestPhone">WhatsApp Phone</label>
+                                    <input type="tel" id="inputGuestPhone" class="form-control" placeholder="919876543210" oninput="updateAllPreviews()">
+                                </div>
+                                <div class="input-group">
+                                    <label for="inputBaseUrl">Invitation Link</label>
+                                    <input type="text" id="inputBaseUrl" class="form-control" placeholder="https://..." oninput="updateAllPreviews()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Editable Events & Guest Counts -->
+                        <div class="section-box">
+                            <div class="section-title">
+                                <span>📅 Editable Events & Reserved Seats</span>
+                                <button type="button" class="preset-chip" onclick="addNewEvent()">+ Add Event</button>
+                            </div>
+                            <div class="events-list-container" id="eventsListContainer">
+                                <!-- Dynamically rendered editable event rows -->
+                            </div>
+                        </div>
+
+                        <!-- 3. Editable Message Text & Wedding Details -->
+                        <div class="section-box">
+                            <div class="section-title">
+                                <span>👑 Wedding Details & Message Customizer</span>
+                            </div>
+                            <div class="form-row-2col">
+                                <div class="input-group">
+                                    <label for="inputGroom">Groom Name</label>
+                                    <input type="text" id="inputGroom" class="form-control" value="Arjun" oninput="updateAllPreviews()">
+                                </div>
+                                <div class="input-group">
+                                    <label for="inputBride">Bride Name</label>
+                                    <input type="text" id="inputBride" class="form-control" value="Kavya" oninput="updateAllPreviews()">
+                                </div>
+                            </div>
+                            <div class="form-row-2col">
+                                <div class="input-group">
+                                    <label for="inputTopHeader">Top Sacred Header</label>
+                                    <input type="text" id="inputTopHeader" class="form-control" value="|| શ્રી ગણેશાય નમઃ ||" oninput="updateAllPreviews()">
+                                </div>
+                                <div class="input-group">
+                                    <label for="inputSubInvite">Sub-Invitation Line</label>
+                                    <input type="text" id="inputSubInvite" class="form-control" value="Together With Our Families We Invite You To Celebrate" oninput="updateAllPreviews()">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label for="inputTagline">Romantic Tagline</label>
+                                <input type="text" id="inputTagline" class="form-control" value="Two Hearts, One Beautiful Beginning" oninput="updateAllPreviews()">
+                            </div>
+                            <div class="input-group">
+                                <label for="inputWelcomeMsg">Personal Welcome Note</label>
+                                <textarea id="inputWelcomeMsg" class="form-control" oninput="updateAllPreviews()">We are delighted to invite you to be a part of our special moments and bless us with your presence.</textarea>
+                            </div>
+                            <div class="input-group">
+                                <label for="inputFooterBlessing">Footer Sign-Off / Blessing</label>
+                                <input type="text" id="inputFooterBlessing" class="form-control" value="With Love & Blessings" oninput="updateAllPreviews()">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN: LIVE PREVIEW & ACTIONS -->
+                    <div class="preview-column">
+                        <div class="preview-header">
+                            <h3>
+                                <span>👁️</span>
+                                <span>Live WhatsApp Message Preview</span>
+                            </h3>
+                            <span style="font-size:11px; color:#7a6b5d;">Real-time auto-format</span>
+                        </div>
+
+                        <div class="whatsapp-mockup">
+                            <div class="whatsapp-bubble">
+                                <div id="liveMessageContent">Generating preview...</div>
+                                <div class="whatsapp-time">
+                                    <span id="previewTimestamp">12:00 PM</span>
+                                    <span style="color:#53bdeb;">✓✓</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="admin-action-buttons">
+                            <!-- Copy WhatsApp message -->
+                            <button type="button" class="btn-main-whatsapp" id="btnCopyWhatsapp" onclick="copyWhatsAppMessage()">
+                                <span style="font-size:18px;">📋</span>
+                                <span id="btnCopyText">Copy Message to WhatsApp</span>
+                            </button>
+
+                            <!-- Download Card as Image (PNG) -->
+                            <button type="button" class="btn-download-image" id="btnDownloadCardImage" onclick="downloadCardImage()">
+                                <span style="font-size:18px;">📥</span>
+                                <span id="btnDownloadText">Download Card as Image (PNG)</span>
+                            </button>
+
+                            <div class="secondary-actions-row">
+                                <button type="button" class="btn-secondary-action" onclick="openWhatsAppDirect()">
+                                    <span>🚀</span>
+                                    <span>Send via WhatsApp</span>
+                                </button>
+                                <button type="button" class="btn-secondary-action" onclick="previewPersonalizedCard()">
+                                    <span>👑</span>
+                                    <span>Preview Card</span>
+                                </button>
+                            </div>
+
+                            <button type="button" class="btn-secondary-action" style="width:100%; border-style:dashed;" onclick="copyInvitationLinkOnly()">
+                                <span>🔗</span>
+                                <span id="btnCopyLinkText">Copy Personalized Link Only</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- VIEW 2: DIGITAL WEDDING CARD -->
+    <div class="view-container" id="cardView">
+        <div class="card-wrapper">
+            <div class="card-container" id="digitalCardContainer">
+                <!-- Header -->
+                <div class="header-top" id="cardTopHeaderDisplay">|| શ્રી ગણેશાય નમઃ ||</div>
+                <div class="sub-invite" id="cardSubInviteDisplay">Together With Our Families We Invite You To Celebrate</div>
+                <div class="ornament-divider">❖</div>
+                
+                <div class="couple-names">
+                    <span id="cardGroomDisplay">Arjun</span>
+                    <span class="heart-icon">♥</span>
+                    <span id="cardBrideDisplay">Kavya</span>
+                </div>
+                
+                <div class="tagline-container">
+                    <span>❖</span>
+                    <span id="cardTaglineDisplay">Two Hearts, One Beautiful Beginning</span>
+                    <span>❖</span>
+                </div>
+
+                <!-- Family Section -->
+                <div class="dear-section">
+                    <div class="dear-label">DEAR</div>
+                    <div class="family-name" id="cardFamilyNameDisplay">SHAH FAMILY</div>
+                    <div class="welcome-msg" id="cardWelcomeMsgDisplay">We are delighted to invite you to be a part of our special moments and bless us with your presence.</div>
+                </div>
+
+                <div class="ornament-divider" style="margin: 5px 0;">❖</div>
+
+                <!-- Events Schedule Box -->
+                <div class="events-box">
+                    <div class="events-header-bg">
+                        <div class="events-header">Your Invited Events & Guests</div>
+                    </div>
+                    <div id="cardEventsListContainer">
+                        <!-- Dynamic rendered card events -->
+                    </div>
+                </div>
+
+                <!-- Bottom Actions -->
+                <div class="bottom-section" id="cardBottomSection">
+                    <div class="actions-container">
+                        <div class="personal-invitation-title">❖ Your Personal Invitation ❖</div>
+                        <a href="javascript:void(0)" class="url-button" id="cardDisplayUrl">invitationmedia.in/i/SH82K</a>
+                        <button type="button" class="open-button" style="background: linear-gradient(to bottom, #d4af37, #aa8420); color:#fff; border: 1px solid #7d5f13;" onclick="downloadCardImage()">
+                            <span>📥</span>
+                            <span>DOWNLOAD CARD AS IMAGE</span>
+                        </button>
+                        <a href="javascript:void(0)" class="open-button" onclick="switchTab('generator')">
+                            <span>⚙️</span>
+                            <span>OPEN WHATSAPP GENERATOR</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer">
+                    <div class="footer-blessing" id="cardFooterBlessingDisplay">❖ With Love & Blessings ❖</div>
+                    <div class="footer-names" id="cardFooterNamesDisplay">Arjun & Kavya</div>
+                    <div class="ornament-divider" style="margin-top: 5px;">❖</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast-notification" id="toast">
+        <span style="font-size:18px; color:#25D366;">✓</span>
+        <span id="toastMsg">Copied to clipboard!</span>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Dynamic event array with full editability
+        let weddingEvents = [
+            { id: 'mehendi', name: '💍 Mehendi Ceremony', date: '10 Dec 2025', count: 4, enabled: true },
+            { id: 'haldi', name: '🟡 Haldi Ceremony', date: '11 Dec 2025', count: 6, enabled: true },
+            { id: 'sangeet', name: '🎵 Sangeet & Musical Night', date: '12 Dec 2025', count: 5, enabled: true },
+            { id: 'wedding', name: '🏛️ Wedding Ceremony & Pheras', date: '13 Dec 2025', count: 6, enabled: true },
+            { id: 'reception', name: '🥂 Reception & Dinner', date: '14 Dec 2025', count: 6, enabled: true }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Timestamp
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12 || 12;
+            document.getElementById('previewTimestamp').innerText = `${hours}:${minutes} ${ampm}`;
+
+            // Initialize default base URL if empty
+            const baseUrlInput = document.getElementById('inputBaseUrl');
+            if (!baseUrlInput.value) {
+                baseUrlInput.value = window.location.href.split('?')[0];
+            }
+
+            // Render Events list in Admin & Parse URL
+            renderEventsEditor();
+            parseUrlParameters();
+            updateAllPreviews();
+        });
+
+        // Tab Switching
+        function switchTab(tab) {
+            const genView = document.getElementById('generatorView');
+            const cardView = document.getElementById('cardView');
+            const genBtn = document.getElementById('tabBtnGenerator');
+            const cardBtn = document.getElementById('tabBtnCard');
+
+            if (tab === 'generator') {
+                genView.classList.add('active');
+                cardView.classList.remove('active');
+                genBtn.classList.add('active');
+                cardBtn.classList.remove('active');
+            } else {
+                cardView.classList.add('active');
+                genView.classList.remove('active');
+                cardBtn.classList.add('active');
+                genBtn.classList.remove('active');
+                updateCardFromGenerator();
+            }
+        }
+
+        // Render Editable Events in Admin Panel
+        function renderEventsEditor() {
+            const container = document.getElementById('eventsListContainer');
+            container.innerHTML = '';
+
+            weddingEvents.forEach((ev, index) => {
+                const row = document.createElement('div');
+                row.className = `event-edit-card ${ev.enabled ? '' : 'disabled-event'}`;
+                row.id = `event-edit-card-${index}`;
+
+                row.innerHTML = `
+                    <div class="event-top-row">
+                        <input type="checkbox" class="event-check" ${ev.enabled ? 'checked' : ''} onchange="toggleEventEnabled(${index}, this.checked)">
+                        <input type="text" class="form-control event-name-input" value="${ev.name}" placeholder="Event Name" oninput="updateEventName(${index}, this.value)">
+                        <input type="text" class="form-control event-date-input" value="${ev.date}" placeholder="Date" oninput="updateEventDate(${index}, this.value)">
+                    </div>
+                    <div class="event-bottom-row">
+                        <div class="counter-controls">
+                            <span style="font-size:11px; font-weight:700; color:#5c101c; margin-right:4px;">GUESTS:</span>
+                            <button type="button" class="counter-btn" onclick="adjustEventCount(${index}, -1)">-</button>
+                            <input type="number" class="counter-val-input" value="${ev.count}" min="1" max="99" oninput="setEventCount(${index}, this.value)">
+                            <button type="button" class="counter-btn" onclick="adjustEventCount(${index}, 1)">+</button>
+                        </div>
+                        <button type="button" class="btn-delete-event" onclick="deleteEvent(${index})">✕ Remove</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+        }
+
+        // Add New Custom Event
+        function addNewEvent() {
+            weddingEvents.push({
+                id: 'event_' + Date.now(),
+                name: '✨ New Function / Pooja',
+                date: '15 Dec 2025',
+                count: 4,
+                enabled: true
+            });
+            renderEventsEditor();
+            updateAllPreviews();
+            showToast('New event added!');
+        }
+
+        // Delete Event
+        function deleteEvent(index) {
+            if (weddingEvents.length <= 1) {
+                showToast('At least one event should remain.');
+                return;
+            }
+            weddingEvents.splice(index, 1);
+            renderEventsEditor();
+            updateAllPreviews();
+        }
+
+        // Event update handlers
+        function toggleEventEnabled(index, enabled) {
+            weddingEvents[index].enabled = enabled;
+            const card = document.getElementById(`event-edit-card-${index}`);
+            if (card) {
+                if (enabled) card.classList.remove('disabled-event');
+                else card.classList.add('disabled-event');
+            }
+            updateAllPreviews();
+        }
+
+        function updateEventName(index, val) {
+            weddingEvents[index].name = val;
+            updateAllPreviews();
+        }
+
+        function updateEventDate(index, val) {
+            weddingEvents[index].date = val;
+            updateAllPreviews();
+        }
+
+        function adjustEventCount(index, change) {
+            let current = parseInt(weddingEvents[index].count) || 0;
+            weddingEvents[index].count = Math.max(1, Math.min(99, current + change));
+            renderEventsEditor();
+            updateAllPreviews();
+        }
+
+        function setEventCount(index, val) {
+            let num = parseInt(val) || 1;
+            weddingEvents[index].count = Math.max(1, Math.min(99, num));
+            updateAllPreviews();
+        }
+
+        function setPresetName(name) {
+            document.getElementById('inputFamilyName').value = name;
+            updateAllPreviews();
+        }
+
+        // Generate personalized URL with parameters
+        function generatePersonalizedUrl() {
+            let baseUrl = document.getElementById('inputBaseUrl').value.trim();
+            if (!baseUrl) {
+                baseUrl = window.location.href.split('?')[0];
+            }
+            const cleanBase = baseUrl.split('?')[0];
+
+            const familyName = document.getElementById('inputFamilyName').value.trim() || 'Guest Family';
+            const params = new URLSearchParams();
+            params.set('name', familyName);
+            params.set('view', 'card');
+
+            weddingEvents.forEach((ev, i) => {
+                if (ev.enabled && parseInt(ev.count) > 0) {
+                    params.set(`ev${i+1}`, `${ev.count}`);
+                }
+            });
+
+            return `${cleanBase}?${params.toString()}`;
+        }
+
+        // Build WhatsApp text message incorporating all custom fields
+        function generateWhatsAppMessageText() {
+            const familyName = document.getElementById('inputFamilyName').value.trim() || 'Guest Family';
+            const groom = document.getElementById('inputGroom').value.trim() || 'Arjun';
+            const bride = document.getElementById('inputBride').value.trim() || 'Kavya';
+            const topHeader = document.getElementById('inputTopHeader').value.trim() || '|| શ્રી गणेशाय नमઃ ||';
+            const welcomeNote = document.getElementById('inputWelcomeMsg').value.trim() || 'We are delighted to invite you to be a part of our special moments and bless us with your presence.';
+            const footerBlessing = document.getElementById('inputFooterBlessing').value.trim() || 'With Love & Blessings';
+            const invitationLink = generatePersonalizedUrl();
+
+            let eventLines = [];
+            weddingEvents.forEach(ev => {
+                if (ev.enabled && parseInt(ev.count) > 0) {
+                    const guestWord = parseInt(ev.count) === 1 ? 'Guest' : 'Guests';
+                    eventLines.push(`• *${ev.name}* (${ev.date}) : *${ev.count} ${guestWord}*`);
+                }
+            });
+
+            const eventsFormatted = eventLines.join('\n');
+
+            const message = 
+`🌸 *WEDDING INVITATION* 🌸
+${topHeader}
+
+Dear *${familyName}*,
+
+Together with our families, we cordially invite you to celebrate the joyful wedding ceremonies of
+✨ *${groom} & ${bride}* ✨
+
+${welcomeNote}
+
+📜 *Invited Events & Reserved Seats for your family:*
+${eventsFormatted}
+
+👉 *View your personalized Digital Invitation Card here:*
+${invitationLink}
+
+${footerBlessing},
+*${groom} & ${bride} & Families* 💖`;
+
+            return message;
+        }
+
+        // Update all previews (WhatsApp box & Card view)
+        function updateAllPreviews() {
+            const groom = document.getElementById('inputGroom').value.trim() || 'Arjun';
+            const bride = document.getElementById('inputBride').value.trim() || 'Kavya';
+            document.getElementById('navCoupleDisplay').innerText = `${groom.toUpperCase()} & ${bride.toUpperCase()} WEDDING`;
+
+            const rawMessage = generateWhatsAppMessageText();
+
+            // Convert WhatsApp *bold* into <strong> for WhatsApp chat mockup
+            const htmlMessage = rawMessage
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\*(.*?)\*/g, "<strong>$1</strong>")
+                .replace(/\n/g, "<br>");
+
+            document.getElementById('liveMessageContent').innerHTML = htmlMessage;
+
+            // Sync Digital Card
+            updateCardFromGenerator();
+        }
+
+        // Sync Generator State into Digital Card View
+        function updateCardFromGenerator() {
+            const familyName = document.getElementById('inputFamilyName').value.trim() || 'GUEST FAMILY';
+            const groom = document.getElementById('inputGroom').value.trim() || 'Arjun';
+            const bride = document.getElementById('inputBride').value.trim() || 'Kavya';
+            const topHeader = document.getElementById('inputTopHeader').value.trim() || '|| શ્રી ગણેશાય નમઃ ||';
+            const subInvite = document.getElementById('inputSubInvite').value.trim() || 'Together With Our Families We Invite You To Celebrate';
+            const tagline = document.getElementById('inputTagline').value.trim() || 'Two Hearts, One Beautiful Beginning';
+            const welcomeMsg = document.getElementById('inputWelcomeMsg').value.trim() || 'We are delighted to invite you to be a part of our special moments and bless us with your presence.';
+            const footerBlessing = document.getElementById('inputFooterBlessing').value.trim() || 'With Love & Blessings';
+
+            document.getElementById('cardFamilyNameDisplay').innerText = familyName;
+            document.getElementById('cardTopHeaderDisplay').innerText = topHeader;
+            document.getElementById('cardSubInviteDisplay').innerText = subInvite;
+            document.getElementById('cardGroomDisplay').innerText = groom;
+            document.getElementById('cardBrideDisplay').innerText = bride;
+            document.getElementById('cardTaglineDisplay').innerText = tagline;
+            document.getElementById('cardWelcomeMsgDisplay').innerText = welcomeMsg;
+            document.getElementById('cardFooterBlessingDisplay').innerText = `❖ ${footerBlessing} ❖`;
+            document.getElementById('cardFooterNamesDisplay').innerText = `${groom} & ${bride}`;
+
+            const personalUrl = generatePersonalizedUrl();
+            const urlDisplayBtn = document.getElementById('cardDisplayUrl');
+            urlDisplayBtn.innerText = personalUrl.replace(/^https?:\/\//, '');
+            urlDisplayBtn.href = personalUrl;
+
+            // Render Events in Digital Card
+            const cardEventsContainer = document.getElementById('cardEventsListContainer');
+            cardEventsContainer.innerHTML = '';
+
+            weddingEvents.forEach(ev => {
+                if (ev.enabled && parseInt(ev.count) > 0) {
+                    const row = document.createElement('div');
+                    row.className = 'event-row';
+                    const c = parseInt(ev.count);
+                    const guestText = `${c} ${c === 1 ? 'GUEST' : 'GUESTS'}`;
+
+                    row.innerHTML = `
+                        <span class="event-name">${ev.name.toUpperCase()}</span>
+                        <span class="event-date">${ev.date.toUpperCase()}</span>
+                        <span class="event-guests">${guestText}</span>
+                    `;
+                    cardEventsContainer.appendChild(row);
+                }
+            });
+        }
+
+        // Parse query parameters
+        function parseUrlParameters() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('name') || urlParams.has('view')) {
+                const name = urlParams.get('name');
+                if (name) {
+                    document.getElementById('inputFamilyName').value = name;
+                }
+
+                weddingEvents.forEach((ev, i) => {
+                    const pKey = `ev${i+1}`;
+                    if (urlParams.has(pKey)) {
+                        const val = parseInt(urlParams.get(pKey));
+                        if (val > 0) {
+                            ev.count = val;
+                            ev.enabled = true;
+                        }
+                    }
+                });
+                renderEventsEditor();
+
+                if (urlParams.get('view') === 'card') {
+                    switchTab('card');
+                }
+            }
+        }
+
+        // Copy WhatsApp Message to Clipboard
+        async function copyWhatsAppMessage() {
+            const message = generateWhatsAppMessageText();
+            const btn = document.getElementById('btnCopyWhatsapp');
+            const btnText = document.getElementById('btnCopyText');
+
+            try {
+                await navigator.clipboard.writeText(message);
+                btn.style.background = 'linear-gradient(135deg, #128C7E, #075E54)';
+                btnText.innerHTML = '✓ Copied Message!';
+                showToast('WhatsApp Invitation Message copied!');
+
+                setTimeout(() => {
+                    btn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
+                    btnText.innerText = 'Copy Message to WhatsApp';
+                }, 2200);
+            } catch (err) {
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value = message;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                showToast('WhatsApp Invitation Message copied!');
+            }
+        }
+
+        // Copy Personalized Link only
+        async function copyInvitationLinkOnly() {
+            const link = generatePersonalizedUrl();
+            const btnText = document.getElementById('btnCopyLinkText');
+
+            try {
+                await navigator.clipboard.writeText(link);
+                btnText.innerHTML = '✓ Copied Link!';
+                showToast('Personalized Card Link copied!');
+                setTimeout(() => {
+                    btnText.innerText = 'Copy Personalized Link Only';
+                }, 2000);
+            } catch (err) {
+                showToast('Personalized Link copied!');
+            }
+        }
+
+        // Open WhatsApp directly via wa.me format
+        function openWhatsAppDirect() {
+            const phoneInput = document.getElementById('inputGuestPhone').value.replace(/[^0-9]/g, '');
+            const message = encodeURIComponent(generateWhatsAppMessageText());
+
+            let url = '';
+            if (phoneInput.length >= 7) {
+                url = `https://wa.me/${phoneInput}?text=${message}`;
+            } else {
+                url = `https://wa.me/?text=${message}`;
+            }
+
+            window.open(url, '_blank');
+        }
+
+        // Switch to Card View
+        function previewPersonalizedCard() {
+            switchTab('card');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Automated Download Card as Image (PNG) via html2canvas
+        async function downloadCardImage() {
+            const btnText = document.getElementById('btnDownloadText');
+            const origText = btnText ? btnText.innerText : '';
+            if (btnText) btnText.innerText = '⏳ Generating HD Image...';
+            showToast('Generating high-resolution card image...');
+
+            // Ensure card data is synchronized
+            updateCardFromGenerator();
+
+            const cardView = document.getElementById('cardView');
+            const wasHidden = !cardView.classList.contains('active');
+
+            const originalCardElement = document.getElementById('digitalCardContainer');
+            let tempWrapper = null;
+            let targetToRender = originalCardElement;
+
+            // If hidden, render clone off-screen for perfect dimensions
+            if (wasHidden) {
+                tempWrapper = document.createElement('div');
+                tempWrapper.style.position = 'fixed';
+                tempWrapper.style.left = '-9999px';
+                tempWrapper.style.top = '0';
+                tempWrapper.style.width = '560px';
+                tempWrapper.style.zIndex = '-9999';
+                tempWrapper.style.background = '#31050a';
+                tempWrapper.style.padding = '20px';
+                
+                const clone = originalCardElement.cloneNode(true);
+                const actionsInClone = clone.querySelector('#cardBottomSection');
+                if (actionsInClone) {
+                    actionsInClone.style.display = 'none';
+                }
+                tempWrapper.appendChild(clone);
+                document.body.appendChild(tempWrapper);
+                targetToRender = clone;
+            }
+
+            try {
+                if (typeof html2canvas === 'undefined') {
+                    throw new Error('html2canvas library not loaded');
+                }
+
+                const familyName = document.getElementById('inputFamilyName').value.trim() || 'Guest_Family';
+                const sanitizedName = familyName.replace(/[^a-zA-Z0-9_-]/g, '_');
+                const filename = `Wedding_Invitation_${sanitizedName}.png`;
+
+                const canvas = await html2canvas(targetToRender, {
+                    scale: 2.5,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: '#31050a',
+                    logging: false
+                });
+
+                const imageURL = canvas.toDataURL('image/png');
+                const downloadLink = document.createElement('a');
+                downloadLink.href = imageURL;
+                downloadLink.download = filename;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+
+                if (btnText) btnText.innerText = '✓ Image Downloaded!';
+                showToast(`Downloaded: ${filename}`);
+
+                setTimeout(() => {
+                    if (btnText) btnText.innerText = origText || 'Download Card as Image (PNG)';
+                }, 2500);
+
+            } catch (error) {
+                console.error('Error generating card image:', error);
+                showToast('Image export error. Please check console.');
+                if (btnText) btnText.innerText = origText || 'Download Card as Image (PNG)';
+            } finally {
+                if (tempWrapper && tempWrapper.parentNode) {
+                    tempWrapper.parentNode.removeChild(tempWrapper);
+                }
+            }
+        }
+
+        // Toast Helper
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            toastMsg.innerText = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
