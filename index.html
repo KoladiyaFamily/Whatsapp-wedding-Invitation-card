@@ -369,46 +369,50 @@
             justify-content: space-between;
             align-items: center;
             padding-left: 28px;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .counter-controls {
+        .event-note-group {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
+            flex: 1;
+            flex-wrap: wrap;
         }
 
-        .counter-btn {
-            width: 26px;
-            height: 26px;
-            border-radius: 5px;
-            border: 1px solid #d0c0a8;
-            background: #fff;
+        .event-note-input {
+            flex: 1;
+            min-width: 130px;
+            font-weight: 600;
+            padding: 6px 10px;
+            font-size: 12px;
             color: var(--maroon-primary);
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
+        }
+
+        .event-mini-chips {
             display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
             align-items: center;
-            justify-content: center;
+        }
+
+        .event-mini-chip {
+            background: #ede3d2;
+            border: 1px solid #d4c5a9;
+            color: var(--maroon-primary);
+            padding: 2px 7px;
+            border-radius: 10px;
+            font-size: 10.5px;
+            font-weight: 600;
+            cursor: pointer;
             transition: all 0.15s ease;
         }
 
-        .counter-btn:hover:not(:disabled) {
+        .event-mini-chip:hover {
             background: var(--maroon-primary);
             color: #fff;
             border-color: var(--maroon-primary);
-        }
-
-        .counter-val-input {
-            width: 44px;
-            text-align: center;
-            padding: 4px 2px;
-            border: 1px solid #dcd2c4;
-            border-radius: 5px;
-            font-weight: 700;
-            font-size: 12.5px;
-            color: var(--maroon-primary);
-            background: #fff;
         }
 
         .btn-delete-event {
@@ -420,6 +424,7 @@
             padding: 2px 6px;
             border-radius: 4px;
             font-weight: 600;
+            margin-left: auto;
         }
 
         .btn-delete-event:hover {
@@ -491,16 +496,13 @@
         .whatsapp-bubble {
             background: #ffffff;
             border-radius: 8px 8px 8px 2px;
-            padding: 12px 14px;
-            max-width: 98%;
+            padding: 12px 14px 8px 14px;
+            max-width: 100%;
+            width: 100%;
             position: relative;
             box-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.15);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            font-size: 12.8px;
-            line-height: 1.5;
-            color: #111b21;
-            white-space: pre-wrap;
-            word-break: break-word;
+            display: flex;
+            flex-direction: column;
         }
 
         .whatsapp-bubble::before {
@@ -514,8 +516,53 @@
             border-right: 8px solid #ffffff;
         }
 
+        .whatsapp-textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: vertical;
+            background: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            line-height: 1.55;
+            color: #111b21;
+            min-height: 320px;
+            padding: 2px 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .whatsapp-textarea:focus {
+            outline: none;
+        }
+
+        .btn-reset-preview {
+            background: #f1ede6;
+            border: 1px solid #d4c5a9;
+            color: #5c101c;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: none;
+        }
+
+        .btn-reset-preview.show {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-reset-preview:hover {
+            background: var(--maroon-primary);
+            color: #fff;
+            border-color: var(--maroon-primary);
+        }
+
         .whatsapp-time {
-            float: right;
+            align-self: flex-end;
             font-size: 10px;
             color: #667781;
             margin-top: 4px;
@@ -967,10 +1014,10 @@
                             </div>
                         </div>
 
-                        <!-- 2. Editable Events & Guest Counts -->
+                        <!-- 2. Editable Events & Guest Notes -->
                         <div class="section-box">
                             <div class="section-title">
-                                <span>📅 Editable Events & Reserved Seats</span>
+                                <span>📅 Editable Events & Guest Notes</span>
                                 <button type="button" class="preset-chip" onclick="addNewEvent()">+ Add Event</button>
                             </div>
                             <div class="events-list-container" id="eventsListContainer">
@@ -1023,15 +1070,18 @@
                     <div class="preview-column">
                         <div class="preview-header">
                             <h3>
-                                <span>👁️</span>
-                                <span>Live WhatsApp Message Preview</span>
+                                <span>💬</span>
+                                <span>Live WhatsApp Message (Editable)</span>
                             </h3>
-                            <span style="font-size:11px; color:#7a6b5d;">Real-time auto-format</span>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <button type="button" class="btn-reset-preview" id="btnResetPreview" onclick="resetMessageToAuto()">↺ Reset</button>
+                                <span style="font-size:11px; color:#7a6b5d;">Directly type to edit</span>
+                            </div>
                         </div>
 
                         <div class="whatsapp-mockup">
                             <div class="whatsapp-bubble">
-                                <div id="liveMessageContent">Generating preview...</div>
+                                <textarea id="liveMessageContent" class="whatsapp-textarea" oninput="onUserEditMessage()" placeholder="Type or customize your WhatsApp invitation message here..."></textarea>
                                 <div class="whatsapp-time">
                                     <span id="previewTimestamp">12:00 PM</span>
                                     <span style="color:#53bdeb;">✓✓</span>
@@ -1148,13 +1198,13 @@
 
     <!-- JAVASCRIPT -->
     <script>
-        // Dynamic event array with full editability
+        // Dynamic event array with flexible text notes / counts
         let weddingEvents = [
-            { id: 'mehendi', name: '💍 Mehendi Ceremony', date: '10 Dec 2025', count: 4, enabled: true },
-            { id: 'haldi', name: '🟡 Haldi Ceremony', date: '11 Dec 2025', count: 6, enabled: true },
-            { id: 'sangeet', name: '🎵 Sangeet & Musical Night', date: '12 Dec 2025', count: 5, enabled: true },
-            { id: 'wedding', name: '🏛️ Wedding Ceremony & Pheras', date: '13 Dec 2025', count: 6, enabled: true },
-            { id: 'reception', name: '🥂 Reception & Dinner', date: '14 Dec 2025', count: 6, enabled: true }
+            { id: 'mehendi', name: '💍 Mehendi Ceremony', date: '10 Dec 2025', guestNote: '4 Members', enabled: true },
+            { id: 'haldi', name: '🟡 Haldi Ceremony', date: '11 Dec 2025', guestNote: '6 Members', enabled: true },
+            { id: 'sangeet', name: '🎵 Sangeet & Musical Night', date: '12 Dec 2025', guestNote: '5 Members', enabled: true },
+            { id: 'wedding', name: '🏛️ Wedding Ceremony & Pheras', date: '13 Dec 2025', guestNote: '6 Members', enabled: true },
+            { id: 'reception', name: '🥂 Reception & Dinner', date: '14 Dec 2025', guestNote: 'સર્વે પરિવાર', enabled: true }
         ];
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -1199,7 +1249,7 @@
             }
         }
 
-        // Render Editable Events in Admin Panel
+        // Render Editable Events in Admin Panel with Flexible Text Inputs & Mini Chips
         function renderEventsEditor() {
             const container = document.getElementById('eventsListContainer');
             container.innerHTML = '';
@@ -1211,16 +1261,20 @@
 
                 row.innerHTML = `
                     <div class="event-top-row">
-                        <input type="checkbox" class="event-check" ${ev.enabled ? 'checked' : ''} onchange="toggleEventEnabled(${index}, this.checked)">
+                        <input type="checkbox" class="event-check" ${ev.enabled ? 'checked' : ''} onchange="toggleEventEnabled(${index}, this.checked)" title="Enable/Disable this event">
                         <input type="text" class="form-control event-name-input" value="${ev.name}" placeholder="Event Name" oninput="updateEventName(${index}, this.value)">
                         <input type="text" class="form-control event-date-input" value="${ev.date}" placeholder="Date" oninput="updateEventDate(${index}, this.value)">
                     </div>
                     <div class="event-bottom-row">
-                        <div class="counter-controls">
-                            <span style="font-size:11px; font-weight:700; color:#5c101c; margin-right:4px;">GUESTS:</span>
-                            <button type="button" class="counter-btn" onclick="adjustEventCount(${index}, -1)">-</button>
-                            <input type="number" class="counter-val-input" value="${ev.count}" min="1" max="99" oninput="setEventCount(${index}, this.value)">
-                            <button type="button" class="counter-btn" onclick="adjustEventCount(${index}, 1)">+</button>
+                        <div class="event-note-group">
+                            <span style="font-size:11px; font-weight:700; color:#5c101c; white-space:nowrap;">Guest Count / Note:</span>
+                            <input type="text" class="form-control event-note-input" value="${ev.guestNote || ''}" placeholder="e.g. 4 Members / સર્વે પરિવાર / Full Family" oninput="updateEventGuestNote(${index}, this.value)">
+                            <div class="event-mini-chips">
+                                <button type="button" class="event-mini-chip" onclick="setEventGuestNotePreset(${index}, '2 Members')">2 Members</button>
+                                <button type="button" class="event-mini-chip" onclick="setEventGuestNotePreset(${index}, '4 Members')">4 Members</button>
+                                <button type="button" class="event-mini-chip" onclick="setEventGuestNotePreset(${index}, 'સર્વે પરિવાર')">સર્વે પરિવાર</button>
+                                <button type="button" class="event-mini-chip" onclick="setEventGuestNotePreset(${index}, 'Full Family')">Full Family</button>
+                            </div>
                         </div>
                         <button type="button" class="btn-delete-event" onclick="deleteEvent(${index})">✕ Remove</button>
                     </div>
@@ -1235,7 +1289,7 @@
                 id: 'event_' + Date.now(),
                 name: '✨ New Function / Pooja',
                 date: '15 Dec 2025',
-                count: 4,
+                guestNote: 'સર્વે પરિવાર',
                 enabled: true
             });
             renderEventsEditor();
@@ -1275,16 +1329,14 @@
             updateAllPreviews();
         }
 
-        function adjustEventCount(index, change) {
-            let current = parseInt(weddingEvents[index].count) || 0;
-            weddingEvents[index].count = Math.max(1, Math.min(99, current + change));
-            renderEventsEditor();
+        function updateEventGuestNote(index, val) {
+            weddingEvents[index].guestNote = val;
             updateAllPreviews();
         }
 
-        function setEventCount(index, val) {
-            let num = parseInt(val) || 1;
-            weddingEvents[index].count = Math.max(1, Math.min(99, num));
+        function setEventGuestNotePreset(index, val) {
+            weddingEvents[index].guestNote = val;
+            renderEventsEditor();
             updateAllPreviews();
         }
 
@@ -1307,29 +1359,28 @@
             params.set('view', 'card');
 
             weddingEvents.forEach((ev, i) => {
-                if (ev.enabled && parseInt(ev.count) > 0) {
-                    params.set(`ev${i+1}`, `${ev.count}`);
+                if (ev.enabled && ev.guestNote && ev.guestNote.trim() !== '') {
+                    params.set(`ev${i+1}`, ev.guestNote.trim());
                 }
             });
 
             return `${cleanBase}?${params.toString()}`;
         }
 
-        // Build WhatsApp text message incorporating all custom fields
+        // Build WhatsApp text message incorporating all custom fields and text notes
         function generateWhatsAppMessageText() {
             const familyName = document.getElementById('inputFamilyName').value.trim() || 'Guest Family';
             const groom = document.getElementById('inputGroom').value.trim() || 'Arjun';
             const bride = document.getElementById('inputBride').value.trim() || 'Kavya';
-            const topHeader = document.getElementById('inputTopHeader').value.trim() || '|| શ્રી गणेशाय नमઃ ||';
+            const topHeader = document.getElementById('inputTopHeader').value.trim() || '|| શ્રી ગણેશાય નમઃ ||';
             const welcomeNote = document.getElementById('inputWelcomeMsg').value.trim() || 'We are delighted to invite you to be a part of our special moments and bless us with your presence.';
             const footerBlessing = document.getElementById('inputFooterBlessing').value.trim() || 'With Love & Blessings';
             const invitationLink = generatePersonalizedUrl();
 
             let eventLines = [];
             weddingEvents.forEach(ev => {
-                if (ev.enabled && parseInt(ev.count) > 0) {
-                    const guestWord = parseInt(ev.count) === 1 ? 'Guest' : 'Guests';
-                    eventLines.push(`• *${ev.name}* (${ev.date}) : *${ev.count} ${guestWord}*`);
+                if (ev.enabled && ev.guestNote && ev.guestNote.trim() !== '') {
+                    eventLines.push(`• *${ev.name}* (${ev.date}) : *${ev.guestNote}*`);
                 }
             });
 
@@ -1358,23 +1409,40 @@ ${footerBlessing},
             return message;
         }
 
+        let isUserCustomizedMessage = false;
+
+        // When user types directly inside WhatsApp Preview box
+        function onUserEditMessage() {
+            isUserCustomizedMessage = true;
+            const resetBtn = document.getElementById('btnResetPreview');
+            if (resetBtn) resetBtn.classList.add('show');
+        }
+
+        // Reset message to auto-generated from left panel inputs
+        function resetMessageToAuto() {
+            isUserCustomizedMessage = false;
+            const resetBtn = document.getElementById('btnResetPreview');
+            if (resetBtn) resetBtn.classList.remove('show');
+            updateAllPreviews(true);
+            showToast('Reset to auto-generated message!');
+        }
+
         // Update all previews (WhatsApp box & Card view)
-        function updateAllPreviews() {
+        function updateAllPreviews(forceRegen = false) {
             const groom = document.getElementById('inputGroom').value.trim() || 'Arjun';
             const bride = document.getElementById('inputBride').value.trim() || 'Kavya';
             document.getElementById('navCoupleDisplay').innerText = `${groom.toUpperCase()} & ${bride.toUpperCase()} WEDDING`;
 
-            const rawMessage = generateWhatsAppMessageText();
-
-            // Convert WhatsApp *bold* into <strong> for WhatsApp chat mockup
-            const htmlMessage = rawMessage
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/\*(.*?)\*/g, "<strong>$1</strong>")
-                .replace(/\n/g, "<br>");
-
-            document.getElementById('liveMessageContent').innerHTML = htmlMessage;
+            const messageTextarea = document.getElementById('liveMessageContent');
+            if (messageTextarea && (!isUserCustomizedMessage || forceRegen)) {
+                const rawMessage = generateWhatsAppMessageText();
+                messageTextarea.value = rawMessage;
+                if (forceRegen) {
+                    isUserCustomizedMessage = false;
+                    const resetBtn = document.getElementById('btnResetPreview');
+                    if (resetBtn) resetBtn.classList.remove('show');
+                }
+            }
 
             // Sync Digital Card
             updateCardFromGenerator();
@@ -1406,21 +1474,19 @@ ${footerBlessing},
             urlDisplayBtn.innerText = personalUrl.replace(/^https?:\/\//, '');
             urlDisplayBtn.href = personalUrl;
 
-            // Render Events in Digital Card
+            // Render Events in Digital Card with flexible guest notes (e.g. "4 Guests", "સર્વે પરિવાર")
             const cardEventsContainer = document.getElementById('cardEventsListContainer');
             cardEventsContainer.innerHTML = '';
 
             weddingEvents.forEach(ev => {
-                if (ev.enabled && parseInt(ev.count) > 0) {
+                if (ev.enabled && ev.guestNote && ev.guestNote.trim() !== '') {
                     const row = document.createElement('div');
                     row.className = 'event-row';
-                    const c = parseInt(ev.count);
-                    const guestText = `${c} ${c === 1 ? 'GUEST' : 'GUESTS'}`;
 
                     row.innerHTML = `
                         <span class="event-name">${ev.name.toUpperCase()}</span>
                         <span class="event-date">${ev.date.toUpperCase()}</span>
-                        <span class="event-guests">${guestText}</span>
+                        <span class="event-guests">${ev.guestNote}</span>
                     `;
                     cardEventsContainer.appendChild(row);
                 }
@@ -1439,9 +1505,9 @@ ${footerBlessing},
                 weddingEvents.forEach((ev, i) => {
                     const pKey = `ev${i+1}`;
                     if (urlParams.has(pKey)) {
-                        const val = parseInt(urlParams.get(pKey));
-                        if (val > 0) {
-                            ev.count = val;
+                        const val = urlParams.get(pKey);
+                        if (val && val.trim() !== '') {
+                            ev.guestNote = val.trim();
                             ev.enabled = true;
                         }
                     }
@@ -1454,9 +1520,10 @@ ${footerBlessing},
             }
         }
 
-        // Copy WhatsApp Message to Clipboard
+        // Copy WhatsApp Message to Clipboard (preserves any manual edits)
         async function copyWhatsAppMessage() {
-            const message = generateWhatsAppMessageText();
+            const textarea = document.getElementById('liveMessageContent');
+            const message = textarea ? textarea.value : generateWhatsAppMessageText();
             const btn = document.getElementById('btnCopyWhatsapp');
             const btnText = document.getElementById('btnCopyText');
 
@@ -1498,10 +1565,12 @@ ${footerBlessing},
             }
         }
 
-        // Open WhatsApp directly via wa.me format
+        // Open WhatsApp directly via wa.me format (preserves any manual edits)
         function openWhatsAppDirect() {
             const phoneInput = document.getElementById('inputGuestPhone').value.replace(/[^0-9]/g, '');
-            const message = encodeURIComponent(generateWhatsAppMessageText());
+            const textarea = document.getElementById('liveMessageContent');
+            const rawMessage = textarea ? textarea.value : generateWhatsAppMessageText();
+            const message = encodeURIComponent(rawMessage);
 
             let url = '';
             if (phoneInput.length >= 7) {
